@@ -138,3 +138,77 @@ void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, un
     }
 
 }
+
+
+
+void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
+    /* DDA (Digital Differential analysis )
+        y = m*x + be;      // 1st
+    next y = m*(x+1) + be;  // 2nd
+    next y = m*x + m + be
+    next y = m*x + be + m
+    next y = y + m  /// << result of the DDA.
+    */
+
+
+    setPixel(x1, y1, r, g, b);
+    setPixel(x2, y2, r, g, b);
+   //Vertical line 
+    if(x1==x2){
+        if(y1>y2){
+            unsigned int temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+        unsigned int y=0, x=x1;
+        for(y = y1+1; y<=y2; y++){
+            setPixel(x, y, r, g, b);
+        }
+    }
+    else if(abs(x2-x1) >= abs(y2-y1)){
+        if(x1>x2){
+            unsigned int temp;
+            temp = x1;
+            x1 = x2;
+            x2 = temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+        double m = (double)((int)y2-(int)y1)/(double)((int)x2-(int)x1);
+        double be = (double)y1-(m * x1);
+        unsigned int x=0;
+        float y = 0;
+        y = m*x1 + be;//Starting value
+
+        for(x = x1+1; x<=x2; x++){
+            y = y + m;
+            setPixel(x, (unsigned int)y, r, g, b);
+        }
+    }
+    else{    
+        if(y1>y2){
+            unsigned int temp;
+            temp = x1;
+            x1 = x2;
+            x2 = temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+
+        double m = (double)((int)y2-(int)y1)/(double)((int)x2-(int)x1);
+        double be = (double)y1-(m * x1);
+        unsigned int y = 0;
+        float x = 0;
+        x = (y1-be)/m; //Starting value
+
+        for(y = y1+1; y<=y2; y++){
+            x = x + 1/m;
+            setPixel((unsigned int)x, y, r, g, b);
+        }
+
+    }
+
+}
