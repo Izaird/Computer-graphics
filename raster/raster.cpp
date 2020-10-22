@@ -54,27 +54,71 @@ void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, un
     Line equation:
     y = m*x + b
     * if you change x, you also get y values.
-    */
+    */      
+   std::cout << abs(x2-x1) << " " << abs(y2-y1)<< std::endl;
+   if(x1==x2){
+        setPixel(x1, y1, r, g, b);
+        setPixel(x2, y2, r, g, b);
+        if(y1>y2){
+            unsigned int temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+unsigned int y=0, x=x1;
+        for(y = y1+1; y<=y2; y++){
+            setPixel(x, y, r, g, b);
+        }
+   }
+    else if(abs(x2-x1) >= abs(y2-y1)){
+        setPixel(x1, y1, r, g, b);
+        setPixel(x2, y2, r, g, b);
+        if(x1>x2){
+            unsigned int temp;
+            temp = x1;
+            x1 = x2;
+            x2 = temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
 
-   double m = (double)(y2-y1)/(double)(x2-x1);
-   double be = (double)y1-(m * x1);
-   unsigned int y = 0, x=0;
-   // Iteration:    x1 < x2
-   setPixel(x1, y1, r, g, b);
-   setPixel(x2, y2, r, g, b);
+        double m = (double)((int)y2-(int)y1)/(double)((int)x2-(int)x1);
+        double be = (double)y1-(m * x1);
+        unsigned int y = 0, x=0;
+        // Iteration:    x1 < x2
 
-    if(x1<x2){
         for(x = x1+1; x<=x2; x++){
-        y = (unsigned int)(m*x + be);
-        setPixel(x, y, r, g, b);
+            y = (unsigned int)(m*x + be);
+            setPixel(x, y, r, g, b);
         }
     }
-    else{
-        for(x = x2+1; x<=x1; x++){
-        y = (unsigned int)(m*x + be);
-        setPixel(x, y, r, g, b);
-        }   
+    else
+    {    
+        setPixel(x1, y1, r, g, b);
+        setPixel(x2, y2, r, g, b);
+        if(y1>y2){
+            unsigned int temp;
+            temp = x1;
+            x1 = x2;
+            x2 = temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+
+        double m = (double)((int)y2-(int)y1)/(double)((int)x2-(int)x1);
+        double be = (double)y1-(m * x1);
+        unsigned int y = 0, x=0;
+        // Iteration:    x1 < x2
+
+        for(y = y1+1; y<=y2; y++){
+            x = (y-be)/m;
+            setPixel(x, y, r, g, b);
+        }
+
     }
+    
 }
 
 void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
