@@ -34,6 +34,25 @@ void Raster::randomPixels(unsigned int number_of_pixels){
     }
 
 }
+void Raster::randomLines(unsigned int number_of_lines){
+    unsigned int x1, x2, y1, y2;
+    unsigned char r, g, b;
+    std::default_random_engine generator;
+    std::uniform_int_distribution<unsigned int> distX(0,1919);
+    std::uniform_int_distribution<unsigned int> distY(0,1079);
+    std::uniform_int_distribution<unsigned char> distC(0x00,0xff);
+
+    for(int i=0; i<number_of_lines; i++) {
+        x1 = distX(generator);
+        x2 = distX(generator);
+        y1 = distY(generator);
+        y2 = distY(generator);
+        r = distC(generator);
+        g = distC(generator);
+        b = distC(generator);
+        drawLineNaive(x1,y1,x2,y2,r,g,b);
+    }
+}
 
 void Raster::write(std::string file_name){
     std::ofstream my_file;
@@ -55,8 +74,8 @@ void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, un
     y = m*x + b
     * if you change x, you also get y values.
     */      
-   std::cout << abs(x2-x1) << " " << abs(y2-y1)<< std::endl;
-   if(x1==x2){
+    std::cout << abs(x2-x1) << " " << abs(y2-y1)<< std::endl;
+    if(x1==x2){
         setPixel(x1, y1, r, g, b);
         setPixel(x2, y2, r, g, b);
         if(y1>y2){
@@ -65,11 +84,11 @@ void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, un
             y1 = y2;
             y2 = temp;
         }
-unsigned int y=0, x=x1;
+        unsigned int y=0, x=x1;
         for(y = y1+1; y<=y2; y++){
             setPixel(x, y, r, g, b);
         }
-   }
+    }
     else if(abs(x2-x1) >= abs(y2-y1)){
         setPixel(x1, y1, r, g, b);
         setPixel(x2, y2, r, g, b);
@@ -93,8 +112,7 @@ unsigned int y=0, x=x1;
             setPixel(x, y, r, g, b);
         }
     }
-    else
-    {    
+    else{    
         setPixel(x1, y1, r, g, b);
         setPixel(x2, y2, r, g, b);
         if(y1>y2){
@@ -118,45 +136,5 @@ unsigned int y=0, x=x1;
         }
 
     }
-    
-}
 
-void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
-    double m = (double)(y2-y1)/(double)(x2-x1); //slope
-    double be = (double)y1 - (m*x1) ;
-    unsigned int x = 0;
-    unsigned int y = 0;
-
-    setPixel(x1, y1, r, g, b);
-    setPixel(x2, y2, r, g, b);
-       
-    y = m*x1 + be;//Starting value
-    for( x=x1+1 ; x<x2 ; x++) {
-        y = y + m;
-        setPixel(x, y, r, g, b);
-    } 
-}
-
-void Raster::drawLineBresenham(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
-      double m = (double)(y2-y1)/(double)(x2-x1); //slope
-      double be = (double)y1 - (m*x1) ;
-      unsigned int x = 0;
-      unsigned int y = 0;
-      int dx = x2 - x1;
-      int dy = y2 - y1;  
-      int p = 2*dy-dx;  /// change 2* using bit operation.
-      int updateUp    = 2*dy;          // -
-      int updateRight = 2*dy-2*dx;     // +
-      setPixel(x1, y1, r, g, b);
-      setPixel(x2, y2, r, g, b);    //            ***  
-      y = m*x1 + be;                ///y1-> ***
-      for( x = x1 + 1 ; x < x2 ; x++ ) {   // deltaX = 1
-        if( p < 0 ) { // < decision parameter
-          y++;
-          p += updateUp;    // < update
-        } else {
-          p += updateRight; // < update
-        }   // p = -++-++---+++-+++---  /// <<< goal
-        setPixel(x, y, r, g, b); /// raster space array[0][0];
-      }     
 }

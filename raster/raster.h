@@ -23,6 +23,9 @@ public:
     //Generetes random pixels with random colors
     void randomPixels(unsigned int number_of_pixels);
 
+    //Generetes random pixels with random colors
+    void randomLines(unsigned int number_of_Lines);
+
     //Naive algorithm to draw a line 
     void drawLineNaive(unsigned int x1, unsigned int y1,
                         unsigned int x2, unsigned int y2,
