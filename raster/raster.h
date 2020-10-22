@@ -1,6 +1,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <random>
 
 //TODO: Make a constructor that recives size of the
 //      raster(rasterSizeX, rasterSizeY)
@@ -20,11 +21,9 @@ public:
                     unsigned char b);
 
 
-    //Write data into a PPM file
-    void write(std::string fie_name);
 
 
-    void randomPixels();
+    void randomPixels(unsigned int number_of_pixels);
 
     //Naive algorithm to draw a line 
     void drawLineNaive(unsigned int x1, unsigned int y1,
@@ -46,4 +45,7 @@ public:
                         unsigned char r,
                         unsigned char g,
                         unsigned char b);
+
+    //Write data into a PPM file
+    void write(std::string fie_name);
 };
