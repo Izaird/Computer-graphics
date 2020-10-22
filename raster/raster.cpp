@@ -50,5 +50,69 @@ void Raster::write(std::string file_name){
 }
 
 void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
-                            
-                        }
+    /* Line drawing algorithm
+    Line equation:
+    y = m*x + b
+    * if you change x, you also get y values.
+    */
+
+   double m = (double)(y2-y1)/(double)(x2-x1);
+   double be = (double)y1-(m * x1);
+   unsigned int y = 0, x=0;
+   // Iteration:    x1 < x2
+   setPixel(x1, y1, r, g, b);
+   setPixel(x2, y2, r, g, b);
+
+    if(x1<x2){
+        for(x = x1+1; x<=x2; x++){
+        y = (unsigned int)(m*x + be);
+        setPixel(x, y, r, g, b);
+        }
+    }
+    else{
+        for(x = x2+1; x<=x1; x++){
+        y = (unsigned int)(m*x + be);
+        setPixel(x, y, r, g, b);
+        }   
+    }
+}
+
+void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
+    double m = (double)(y2-y1)/(double)(x2-x1); //slope
+    double be = (double)y1 - (m*x1) ;
+    unsigned int x = 0;
+    unsigned int y = 0;
+
+    setPixel(x1, y1, r, g, b);
+    setPixel(x2, y2, r, g, b);
+       
+    y = m*x1 + be;//Starting value
+    for( x=x1+1 ; x<x2 ; x++) {
+        y = y + m;
+        setPixel(x, y, r, g, b);
+    } 
+}
+
+void Raster::drawLineBresenham(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
+      double m = (double)(y2-y1)/(double)(x2-x1); //slope
+      double be = (double)y1 - (m*x1) ;
+      unsigned int x = 0;
+      unsigned int y = 0;
+      int dx = x2 - x1;
+      int dy = y2 - y1;  
+      int p = 2*dy-dx;  /// change 2* using bit operation.
+      int updateUp    = 2*dy;          // -
+      int updateRight = 2*dy-2*dx;     // +
+      setPixel(x1, y1, r, g, b);
+      setPixel(x2, y2, r, g, b);    //            ***  
+      y = m*x1 + be;                ///y1-> ***
+      for( x = x1 + 1 ; x < x2 ; x++ ) {   // deltaX = 1
+        if( p < 0 ) { // < decision parameter
+          y++;
+          p += updateUp;    // < update
+        } else {
+          p += updateRight; // < update
+        }   // p = -++-++---+++-+++---  /// <<< goal
+        setPixel(x, y, r, g, b); /// raster space array[0][0];
+      }     
+}

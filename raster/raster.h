@@ -20,9 +20,7 @@ public:
                     unsigned char g,
                     unsigned char b);
 
-
-
-
+    //Generetes random pixels with random colors
     void randomPixels(unsigned int number_of_pixels);
 
     //Naive algorithm to draw a line 
