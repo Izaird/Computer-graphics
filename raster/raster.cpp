@@ -142,8 +142,9 @@ void Raster::drawLineNaive(unsigned int x1, unsigned int y1, unsigned int x2, un
 
 
 void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
-    /* DDA (Digital Differential analysis )
-        y = m*x + be;      // 1st
+    /*
+    * DDA (Digital Differential analysis )
+       y = m*x + be;      // 1st
     next y = m*(x+1) + be;  // 2nd
     next y = m*x + m + be
     next y = m*x + be + m
@@ -211,4 +212,83 @@ void Raster::drawLineDDA(unsigned int x1, unsigned int y1, unsigned int x2, unsi
 
     }
 
+}
+
+void Raster::drawLineBresenham(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, unsigned char r, unsigned char g, unsigned char b){
+    /*
+    Bresenham (middle point)
+    The principal idea behind this algorithm is that multiple operations 
+    with integers are less expensive in terms of computacional power than 
+    one floating point operation.
+
+    1fp > ~7 integer operations 
+    
+    * Observation: the decision is binary
+    This decision is made using the distance between:
+        Next pixel and the middle point.
+
+    Delta one(d1) = The difference from the upper option and the middle point.
+    Delta two(d2) = The difference from the lower option and the middle point.
+
+
+    * d2 == d1 Chose the lower option, deltaY = 0
+    
+    * d2 <  d1 Chose the lower option, deltaY = 0
+    (d1 - d2) >= 0
+
+    * d2 >  d1 Chose the upper option, deltaY = 1
+    (d1 - d2) < 0
+
+    * We only need to check the sign of (d1-d2)
+
+    */
+    //Vertical line 
+    if(x1==x2){
+
+    setPixel(x1, y1, r, g, b);
+    setPixel(x2, y2, r, g, b);
+        if(y1>y2){
+            unsigned int temp;
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+        unsigned int y=0, x=x1;
+        for(y = y1+1; y<=y2; y++){
+            setPixel(x, y, r, g, b);
+        }
+    }
+    else{
+        unsigned x = x1, y=y1;
+        int w = x2 -x1;
+        int h = y2 - y1;
+        int dx1=0, dy1=0, dx2=0, dy2=0;
+        dx1 = (w<0) ? -1 : 1;
+        dy1 = (h<0) ? -1 : 1;
+        dx2 = (w<0) ? -1 : 1;
+        int longest = abs(w);
+        int shortest = abs(h);
+
+        if(!(longest>shortest)){
+            longest = abs(h);
+            shortest = abs(w);
+            dy2 = (h<0) ? -1 : 1;
+            dx2 = 0;
+        }
+
+        int numerator =  longest >>1;
+        for(int i=0; i<=longest;i++){
+            setPixel(x,y,r,b,g);
+            numerator += shortest;
+            if(!(numerator<longest)){
+                numerator -= longest;
+                x += dx1;
+                y +=dy1;
+            }
+            else{
+                x += dx2;
+                y +=dy2;
+            }
+        }
+    }
 }
