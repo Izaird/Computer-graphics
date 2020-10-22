@@ -1,17 +1,17 @@
 #include <cstring>
 #include <iostream>
+#include <fstream>
 
+//TODO: Make a constructor that recives size of the
+//      raster(rasterSizeX, rasterSizeY)
 
 class Raster{
 private:
-    unsigned int rasterSizeX;
-    unsigned int rasterSizeY;
+    unsigned char data[1920][1080][3];
 public:
     //Default constructor
     Raster();
 
-    //Constructor with values
-    Raster(int x, int y);
 
     //Set a single pixel in the raster space.
     void setPixel(unsigned int x, unsigned int y,
@@ -19,8 +19,12 @@ public:
                     unsigned char g,
                     unsigned char b);
 
+
     //Write data into a PPM file
-    void write(void);
+    void write(std::string fie_name);
+
+
+    void randomPixels();
 
     //Naive algorithm to draw a line 
     void drawLineNaive(unsigned int x1, unsigned int y1,
